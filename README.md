@@ -6,7 +6,7 @@ Inspired by [sst/opencode#768](https://github.com/sst/opencode/issues/768).
 
 ## How it looks
 
-![Copilot Usage Toast](./assets/screenshot.png)
+![Copilot Usage Toast](./assets/looks.png)
 
 ## How it works 
 
