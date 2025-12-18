@@ -4,6 +4,8 @@ A plugin for [OpenCode](https://opencode.ai) that displays your GitHub Copilot p
 
 Inspired by [sst/opencode#768](https://github.com/sst/opencode/issues/768).
 
+**Note:** GitHub's billing API has a delay. Usage may take a few minutes to update.
+
 ## How it looks
 
 ![Copilot Usage Toast](./assets/looks.png)
@@ -100,8 +102,6 @@ $env:COPILOT_QUOTA = "1500"  # optional, defaults to 300
 **"Failed to fetch quota"**
 - Verify your PAT has **Plan (read-only)** permission
 - Check `GITHUB_USERNAME` matches your GitHub handle exactly
-
-**Note:** GitHub's billing API has a delay. Sometimes usage may take a few minutes to update.
 
 ## License
 
