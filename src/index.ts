@@ -110,7 +110,7 @@ async function fetchCopilotUsage(
       )
       .reduce((sum, item) => sum + item.grossQuantity, 0);
 
-    return { used: Math.round(used), quota: getQuota() }
+    return { used, quota: getQuota() }
   } catch (error) {
     console.error("[copilot-usage] Failed to fetch usage:", error);
     return null;
@@ -171,7 +171,7 @@ const CopilotUsagePlugin = async ({ client }: { client: any }) => {
       }
 
       const { used, quota } = usage;
-      const percentage = Math.round((used / quota) * 100);
+      const percentage = (used / quota) * 100;
       const remaining = Math.max(0, quota - used);
       const bar = createProgressBar(used, quota);
 
@@ -179,7 +179,11 @@ const CopilotUsagePlugin = async ({ client }: { client: any }) => {
       if (percentage >= 90) variant = "error";
       else if (percentage >= 75) variant = "warning";
 
-      const message = `${bar}\n${used}/${quota} (${percentage}%) • ${remaining} left`;
+      const usedDisplay = Number.isInteger(used) ? used : used.toFixed(1);
+      const remainingDisplay = Number.isInteger(remaining) ? remaining : remaining.toFixed(1);
+      const percentDisplay = Number.isInteger(percentage) ? percentage : percentage.toFixed(1);
+
+      const message = `${bar}\n${usedDisplay}/${quota} (${percentDisplay}%) • ${remainingDisplay} left`;
 
       await client.tui.showToast({
         body: {

@@ -8,97 +8,85 @@ Inspired by [sst/opencode#768](https://github.com/sst/opencode/issues/768).
 
 ![Copilot Usage Toast](./assets/screenshot.png)
 
-**Note:** GitHub's billing API has a delay. Usage may take minutes to update.
+## How it works 
 
-## Quick Start
+1. Listens for the `session.idle` event (when a conversation ends).
+2. Checks if the last message came from `github-copilot`.
+3. Makes a direct `GET` request to GitHub's official Billing API:
+   `https://api.github.com/users/{USERNAME}/settings/billing/premium_request/usage`
+4. Calculates usage and displays a local toast notification.
 
-### 1. Create a GitHub Token (PAT)
+## Installation
 
-1. Go to [**GitHub Fine-grained Token Settings**](https://github.com/settings/personal-access-tokens/new)
-2. Generate a token with:
-   - **Resource owner:** Your username
-   - **Repository access:** `Public Repositories (read-only)` or `No access`
-   - **Account permissions:** **Plan** -> `Read-only`
-
-### 2. Configure Environment Variables
-
-#### macOS / Linux (Bash, Zsh, Fish)
-Add to your shell config (`~/.bashrc`, `~/.zshrc`, or `~/.config/fish/config.fish`):
-
-```bash
-export GITHUB_USERNAME="your-github-username"
-export GITHUB_PAT="github_pat_xxxx"
-export COPILOT_QUOTA=300  # 50 (free) | 300 (pro) | 1500 (pro+)
-```
-
-> **Note:** For Fish, use `export` instead of `set -gx`.
-
-#### Windows (PowerShell)
-Add to your PowerShell profile (`code $PROFILE`):
-
-```powershell
-$env:GITHUB_USERNAME = "your-github-username"
-$env:GITHUB_PAT = "github_pat_xxxx"
-$env:COPILOT_QUOTA = "300"
-```
-
-### 3. Install Plugin
-
-Add the package to your `opencode.json` configuration file:
-
-**macOS / Linux:** `~/.config/opencode/opencode.json`
-**Windows:** `%USERPROFILE%\.config\opencode\opencode.json`
+### 1. Add to opencode.json
 
 ```json
+// you can add @1.0.1 at the end of the string to pin the version "opencode-copilot-usage-toast@1.0.1"
 {
+  // ... (your already existing config)
   "plugin": [
-    "opencode-copilot-usage-toast"
-  ]
+  // ... other plugins you have
+  "opencode-copilot-usage-toast", 
+
+
+  ],
 }
 ```
 
-Restart OpenCode to load the plugin.
+### 2. Set environment variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GITHUB_USERNAME` | Yes | Your GitHub username |
+| `GITHUB_PAT` | Yes | [Fine-grained PAT](https://github.com/settings/personal-access-tokens/new) with **Plan -> Read-only** permission |
+| `COPILOT_QUOTA` | No | Your plan limit: `50` (free), `300` (pro, default), `1500` (pro+) |
+
+**macOS / Linux** (Modify your run commands file `~/.bashrc`, `~/.zshrc`, `~/.config/fish/config.fish`):
+```bash
+export GITHUB_USERNAME="your-username"
+export GITHUB_PAT="github_pat_xxxx"
+export COPILOT_QUOTA=1500  # optional, defaults to 300 (pro usage)
+```
+
+**Windows** (PowerShell profile via `code $PROFILE`): (I don't use windows, untested)
+```powershell
+$env:GITHUB_USERNAME = "your-username"
+$env:GITHUB_PAT = "github_pat_xxxx"
+$env:COPILOT_QUOTA = "1500"  # optional, defaults to 300
+```
+
+### 3. Restart OpenCode
 
 ---
 
-## Manual Installation (Legacy)
+## Token Creation (Detailed)
 
-If you prefer not to use the NPM package, you can manually install the plugin file:
+1. Go to [**GitHub Personal Access Tokens**](https://github.com/settings/personal-access-tokens)
 
-```bash
-mkdir -p ~/.config/opencode/plugin
-curl -o ~/.config/opencode/plugin/copilot-usage.ts \
-  https://raw.githubusercontent.com/fgonzalezurriola/opencode-copilot-usage/main/src/index.ts
-```
+2. Click **"Generate new token"** → **"Fine-grained token"**
+
+3. Fill in the form:
+   - **Token name:** `opencode-copilot-usage` (or any name you want)
+   - **Expiration:** 90 days (or your preference)
+   - **Resource owner:** Select your username
+
+4. Under **"Repository access"**, select:
+   - `Public Repositories (read-only)` or `No access`
+
+5. Expand **"Account permissions"** and set:
+   - **Plan** → `Read-only`
+
+6. Click **"Generate token"**
+
+7. Copy the token (starts with `github_pat_`) and save it somewhere safe
 
 ## Troubleshooting
 
-### "Failed to fetch quota"
-- Verify your PAT has the **Plan (read-only)** permission.
-- Check that `GITHUB_USERNAME` matches your GitHub handle exactly.
+**"Failed to fetch quota"**
+- Verify your PAT has **Plan (read-only)** permission
+- Check `GITHUB_USERNAME` matches your GitHub handle exactly
 
-### Test API Manually
-
-**Bash/Zsh:**
-```bash
-curl -s \
-  -H "Accept: application/vnd.github+json" \
-  -H "Authorization: Bearer $GITHUB_PAT" \
-  -H "X-GitHub-Api-Version: 2022-11-28" \
-  "https://api.github.com/users/$GITHUB_USERNAME/settings/billing/premium_request/usage?year=$(date +%Y)&month=$(date +%-m)"
-```
-
-**PowerShell:**
-```powershell
-$headers = @{
-  "Accept" = "application/vnd.github+json"
-  "Authorization" = "Bearer $env:GITHUB_PAT"
-  "X-GitHub-Api-Version" = "2022-11-28"
-}
-$year = (Get-Date).Year
-$month = (Get-Date).Month
-Invoke-RestMethod -Uri "https://api.github.com/users/$env:GITHUB_USERNAME/settings/billing/premium_request/usage?year=$year&month=$month" -Headers $headers
-```
+**Note:** GitHub's billing API has a delay. Sometimes usage may take a few minutes to update.
 
 ## License
 
