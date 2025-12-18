@@ -1,6 +1,6 @@
 {
   "name": "opencode-copilot-usage-toast",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "OpenCode plugin that displays your GitHub Copilot premium requests quota after each conversation.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
