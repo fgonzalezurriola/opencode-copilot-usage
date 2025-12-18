@@ -21,7 +21,7 @@ Inspired by [sst/opencode#768](https://github.com/sst/opencode/issues/768).
 ### 1. Add to opencode.json (remove the comments if you're not using .jsonc)
 
 ```jsonc
-// you can add @1.0.0 at the end of the string to pin the version "opencode-copilot-usage-toast@1.0.1"
+// you can add @1.0.2 at the end of the string to pin the version "opencode-copilot-usage-toast@1.0.2"
 {
   // ... (your already existing config)
   "plugin": [
