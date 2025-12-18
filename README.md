@@ -18,10 +18,10 @@ Inspired by [sst/opencode#768](https://github.com/sst/opencode/issues/768).
 
 ## Installation
 
-### 1. Add to opencode.json
+### 1. Add to opencode.json (remove the comments if you're not using .jsonc)
 
-```json
-// you can add @1.0.1 at the end of the string to pin the version "opencode-copilot-usage-toast@1.0.1"
+```jsonc
+// you can add @1.0.0 at the end of the string to pin the version "opencode-copilot-usage-toast@1.0.1"
 {
   // ... (your already existing config)
   "plugin": [

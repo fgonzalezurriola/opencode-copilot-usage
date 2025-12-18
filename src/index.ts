@@ -183,7 +183,7 @@ const CopilotUsagePlugin = async ({ client }: { client: any }) => {
       const remainingDisplay = Number.isInteger(remaining) ? remaining : remaining.toFixed(1);
       const percentDisplay = Number.isInteger(percentage) ? percentage : percentage.toFixed(1);
 
-      const message = `${bar}\n${usedDisplay}/${quota} (${percentDisplay}%) • ${remainingDisplay} left`;
+      const message = `${bar} ${percentDisplay}%\n${usedDisplay}/${quota} • ${remainingDisplay} left`;
 
       await client.tui.showToast({
         body: {
