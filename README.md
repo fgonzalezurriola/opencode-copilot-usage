@@ -55,6 +55,21 @@ $env:GITHUB_PAT = "github_pat_xxxx"
 $env:COPILOT_QUOTA = "1500"  # optional, defaults to 300
 ```
 
+> **tip:** If your dotfiles are public (GitHub, chezmoi, etc.), store secrets in a separate file:
+>
+> 1. Create `~/.secrets.env` (add to your global `.gitignore`):
+>    ```bash
+>    export GITHUB_USERNAME="your-username"
+>    export GITHUB_PAT="github_pat_xxxx"
+>    ```
+>
+> 2. Source it from your shell config (`~/.bashrc`, `~/.zshrc`):
+>    ```bash
+>    [ -f ~/.secrets.env ] 
+>    ```
+>
+> This keeps your tokens out of version control.
+
 ### 3. Restart OpenCode
 
 ---
